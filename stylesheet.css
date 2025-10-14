@@ -1,0 +1,200 @@
+body {
+    box-sizing: border-box;
+    background-color: #fcfcfc;
+    font-family: "Nunito Sans", sans-serif;
+    color: #555
+}
+
+#note {
+    text-align: center;
+    color: #313639;
+    font-size: large;
+    margin-bottom: 0%;
+}
+
+#key-note {
+    font-size: 0.65em;
+    margin-top: -5px;
+    color: #313639;
+}
+
+h1 {
+    text-align: center;
+    padding-top: 15px;
+    padding-bottom: -50px;
+    color: #313639;
+}
+
+#map {
+    margin-top: -35%;
+    width: 50vw;
+}
+
+#first-map {
+    margin-left: 27%;
+    margin-bottom: 5%;
+}
+
+#map2 {
+    margin-top: -39%;
+    width:50vw;
+    
+}
+
+#second-map {
+    margin-left: 27%;
+    margin-bottom: 5%;
+}
+
+.tooltip {
+    position: absolute;
+    padding: .5rem;
+    background: #FFFFFF;
+    color: #313639;
+    border: 1px solid #313639;
+    border-radius: 8px;
+    pointer-events: none;
+    font-size: 1rem;
+}
+
+input[type="button"] {
+    margin-bottom: 5px;
+    background-color: #FFFFFF;
+    color: #313639;
+    border: 1px solid #313639;
+    border-radius: 8px;
+    padding: 5px;
+}
+
+.buttons {
+    margin-top: 10px;
+}
+
+input[type="button"]:hover {
+    background-color: #e1e0e0;
+    color: #313639;
+    border: 1px solid #313639;
+}
+
+input[type="button"]:focus {
+    background-color: #e1e0e0;
+    color: #313639;
+    border: 1px solid #313639;
+}
+
+#ledgend {
+    position:relative;
+    z-index: 5;
+    background: #FFFFFF;
+    color: #313639;
+    border: 1px solid #313639;
+    border-radius: 8px;
+    width: 160px;
+    padding: 10px 30px 0px 25px;
+    margin-top: 7%;
+    right: 12%;
+}
+
+ul li { 
+    list-style-type: square;
+}
+
+#VLow::marker {
+    color: #F9C7C7;
+    font-size: 3em;
+    line-height: 0.5;
+}
+
+#Low::marker {
+    color: #E08A8A;
+    font-size: 3em;
+    line-height: 0.5;
+}
+
+#Medium::marker {
+    color: #D05959;
+    font-size: 3em;
+    line-height: 0.5;
+}
+
+#High::marker {
+    color: #8E1C1C;
+    font-size: 3em;
+    line-height: 0.5;
+}
+
+#VHigh::marker {
+    color: #5D0404;
+    font-size: 3em;
+    line-height: 0.5;
+}
+
+li span{
+    vertical-align: 0.55em;
+    margin-left: -10;
+ }
+
+#VLow2::marker {
+    color: #bbebb9;
+    font-size: 3em;
+    line-height: 0.5;
+}
+
+#Low2::marker {
+    color: #7cd180;
+    font-size: 3em;
+    line-height: 0.5;
+}
+
+#Medium2::marker {
+    color: #5bc24e;
+    font-size: 3em;
+    line-height: 0.5;
+}
+
+#High2::marker {
+    color: #228318;
+    font-size: 3em;
+    line-height: 0.5;
+}
+
+#VHigh2::marker {
+    color: #065803;
+    font-size: 3em;
+    line-height: 0.5;
+}
+
+@media only screen and (min-width: 1440px) {   
+    #key-note {
+        font-size: 0.8rem;
+    }
+    
+    .tooltip {
+        font-size: 1rem;
+    }
+
+    #map {
+        margin-top: -33%;
+    }
+    
+    #map2 {
+        margin-top: -37%;      
+    }
+
+    #first-map {
+        margin-left: 33%;
+    }
+    
+    #second-map {
+        margin-left: 33%;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    #ledgend {
+        font-size: large;
+    }
+  }
+

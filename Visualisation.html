@@ -1,0 +1,382 @@
+<html lang="en">
+    <head>
+        <title>Welsh Speakers and Identity by Local Authority</title>
+        <meta charset="UTF-8">
+        <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Podkova:wght@400..800&display=swap" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="stylesheet.css">
+    </head>
+    <body>
+        
+        <h1>Ability to Speak Welsh by Local Authortiy:</h1>
+        <p id="note">Hover over the map to see the percentages for each local authority.</p>
+            <div id="first-map">
+                <div id="ledgend">Percentage who:
+                <div class="buttons">
+                    <input type="button" id="canButton" onclick="updateSpeak('a')" value="Can Speak Welsh"/><br>
+                    <input type="button" id="cantButton" onclick="updateSpeak('b')" value="Can't Speak Welsh"/><br>
+                </div>
+                <ul>
+                    <li id="VLow"><span>0-20%</span></li>
+                    <li id="Low"><span>21-40%</span></li>
+                    <li id="Medium"><span>41-60%</span></li>
+                    <li id="High"><span>61-80%</span></li>
+                    <li id="VHigh"><span>81-100%</span></li>
+                </ul>
+                <p id="key-note">Percentage of 2,461,653 responses to the 2021 Census.</p>
+            </div>
+            
+            <!--Fossheim, S.L. 2020. An introduction to accessible data visualizations with D3.js Available: https://fossheim.io/writing/posts/accessible-dataviz-d3-intro/ [Accessed: 29 March 2025]-->
+            <svg width="0" height="0">
+                <defs>
+                  <pattern id="dots" x="0" y="0" width="3" height="3" patternUnits="userSpaceOnUse">
+                    <rect fill="#302f2f" x="0" y="0" width="3" height="3"></rect>
+                    <circle fill="#e1e0e0" cx="1" cy="1" r="2">
+                    </circle>
+                  </pattern>
+                </defs>
+            </svg> 
+            <!--End of reference-->
+        
+            <div id="map"></div>
+            </div>
+    
+        
+        <h1>Welsh Identification by Local Authority:</h1>
+        <p id="note">Hover over the map to see the percentages for each local authority.</p>
+            <div id="second-map">
+                <div id="ledgend">Percentage who identify as:
+                <div class="buttons">
+                    <input type="button" id="wButton" onclick="update(1)" value="Welsh Only"/><br>
+                    <input type="button" id="wbButtons" onclick="update(2)" value="Welsh-British"/><br>
+                    <input type="button" id="bButtons" onclick="update(3)" value="British Only"/>
+                </div>
+                <ul>
+                    <li id="VLow2"><span>0-20%</span></li>
+                    <li id="Low2"><span>21-40%</span></li>
+                    <li id="Medium2"><span>41-60%</span></li>
+                    <li id="High2"><span>61-80%</span></li>
+                    <li id="VHigh2"><span>81-100%</span></li>
+                </ul>
+                <p id="key-note">Percentage of 2,461,653 responses to the 2021 Census.</p>
+            </div>
+            <div id="map2"></div>
+            </div>
+
+        <script type="text/javascript">
+            var divwidth = document.getElementById('first-map').offsetWidth
+            let width = 550;
+            let height = 550;
+
+            let red = {
+                    'VLow': {name:'VLow', colour:'#F9C7C7'},
+                    'Low':{name:'Low', colour:'#E08A8A'},
+                    'Medium': {name:'Medium', colour:'#D05959'},
+                    'High':{name:'High', colour:'#8E1C1C'},
+                    'VHigh':{name:'VHigh', colour:'#5D0404'}
+                }
+            
+            let green = {
+                'VLow': {name:'VLow', colour:'#bbebb9'},
+                'Low':{name:'Low', colour:'#7cd180'},
+                'Medium': {name:'Medium', colour:'#5bc24e'},
+                'High':{name:'High', colour:'#228318'},
+                'VHigh':{name:'VHigh', colour:'#065803'}
+            }
+
+            var div1 = d3.select("body").append("div")
+                .attr("class", "tooltip")
+                .style("opacity", 0);
+
+            var div2 = d3.select("body").append("div")
+                .attr("class", "tooltip")
+                .style("opacity", 0);
+
+            let svg = d3.select('#map')
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height);
+
+            let secondSvg = d3.select('#map2')
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height);
+
+            let projection = d3.geoMercator();
+            let path = d3.geoPath().projection(projection);
+
+            function updateSpeak(letter) {
+            Promise.all([
+                d3.json('walesLocalAuth.geojson'),
+                d3.csv('LAWelshLang.csv')
+            ]).then(([geo_data, welsh_data]) => {
+
+                let get_colour = function(id) {
+                    let calc_id = id - 340
+                    if (letter == 'a') {
+                        if ( welsh_data[calc_id].Percentage_Can < 20 ) {
+                            return red['VLow'].colour;
+                        } else if ( welsh_data[calc_id].Percentage_Can < 40 ) {
+                            return red['Low'].colour;
+                        } else if ( welsh_data[calc_id].Percentage_Can < 60 ) {
+                            return red['Medium'].colour;
+                        } else if ( welsh_data[calc_id].Percentage_Can < 80 ) {
+                            return red['High'].colour;
+                        } else {
+                            return red['VHigh'].colour;
+                        }
+                    } else { 
+                        if ( welsh_data[calc_id].Percentage_Cant < 20 ) {
+                            return red['VLow'].colour;
+                        } else if ( welsh_data[calc_id].Percentage_Cant < 40 ) {
+                            return red['Low'].colour;
+                        } else if ( welsh_data[calc_id].Percentage_Cant < 60) {
+                            return red['Medium'].colour;
+                        } else if ( welsh_data[calc_id].Percentage_Cant < 80 ) {
+                            return red['High'].colour;
+                        } else {
+                            return red['VHigh'].colour;
+                        }
+                    } 
+                }
+
+                let get = function(id) {
+                        let calc_id = id - 340
+                        if ( letter == 'a' ) {
+                            return "Can Speak Welsh: " + welsh_data[calc_id].Percentage_Can;
+                        } else {
+                            return "Can't Speak Welsh: " + welsh_data[calc_id].Percentage_Cant;
+                        }
+                    }
+                
+                let popget = function(id) {
+                    let calc_id = id - 340
+                    return "Total population: " + welsh_data[calc_id].Total_Population;
+                }
+
+                projection.fitSize([width, height], geo_data);
+
+                svg.selectAll('path')
+                    .data(geo_data.features)
+                    .join((enter) => {
+                        enter.append('path')
+                            .attr('d', path)
+                            .attr('fill', (d) => get_colour(d.properties.FID))
+                            .attr('stroke', '#fcfcfc')
+                            .attr('stroke-width', '1px')
+                    
+                            .on('mouseover', function (d, i) {
+                                d3.select(this).transition()
+                                    .duration('50')
+                                    .attr('fill', 'url(#dots)'); 
+                                div1.transition()
+                                    .duration(50)
+                                    .style("opacity", 1);
+                                    let num = "<b>" + i.properties.LAD24NM + ":</b> <br>" + get(i.properties.FID) + "% <br><em><small>" + 
+                                        popget(i.properties.FID) + "<small><em>";
+                                        div1.html(num)
+                                            .style("left", (d.pageX + 15) + "px")
+                                            .style("top", (d.pageY - 30) + "px");
+                                })
+                            .on('mouseout', function (d, i) {
+                                d3.select(this).transition()
+                                    .duration('50')
+                                    .attr('opacity', '1')
+                                    .attr('fill', (d) => get_colour(d.properties.FID))
+                                div1.transition()
+                                    .duration('50')
+                                    .style("opacity", 0);
+                                });
+                            }, (update) => {
+                            update.attr('fill', (d) => get_colour(d.properties.FID))
+                                .on('mouseover', function (d, i) {
+                                        d3.select(this).transition()
+                                            .duration('50')
+                                            .attr('fill', 'url(#dots)'); 
+                                        div2.transition()
+                                            .duration(50)
+                                            .style("opacity", 1);
+                                            let num = "<b>" + i.properties.LAD24NM + ":</b> <br>" + get(i.properties.FID) + "% <br><em><small>" +
+                                                popget(i.properties.FID) + "<small><em>";
+                                                div2.html(num)
+                                                    .style("left", (d.pageX + 15) + "px")
+                                                    .style("top", (d.pageY - 30) + "px");
+                                    })
+                                .on('mouseout', function (d, i) {
+                                        d3.select(this).transition()
+                                            .duration('50')
+                                            .attr('opacity', '1')
+                                            .attr('fill', (d) => get_colour(d.properties.FID))
+                                        div2.transition()
+                                            .duration('50')
+                                            .style("opacity", 0);
+                            });
+                        })
+            })
+        }
+            // second map here
+
+            function update(select) {
+            Promise.all([
+                    d3.json('walesLocalAuth.geojson'),
+                    d3.csv('LAWelshLang.csv')
+                ]).then(([geo_data, welsh_data]) => {
+                    projection.fitSize([width, height], geo_data);
+
+                    let get_colour = function(id) {
+                        let calc_id = id - 340
+                        if (select == 1) {
+                            if ( welsh_data[calc_id].Percentage_WI < 20 ) {
+                                return green['VLow'].colour;
+                            } else if ( welsh_data[calc_id].Percentage_WI < 40 ) {
+                                return green['Low'].colour;
+                            } else if ( welsh_data[calc_id].Percentage_WI < 60 ) {
+                                return green['Medium'].colour;
+                            } else if ( welsh_data[calc_id].Percentage_WI < 80 ) {
+                                return green['High'].colour;
+                            } else {
+                                return green['VHigh'].colour;
+                            }
+                        } else if (select == 2) {
+                            if ( welsh_data[calc_id].Percentage_WBI <= 20 ) {
+                                return green['VLow'].colour;
+                            } else if ( welsh_data[calc_id].Percentage_WBI <= 40 ) {
+                                return green['Low'].colour;
+                            } else if ( welsh_data[calc_id].Percentage_WBI <= 60 ) {
+                                return green['Medium'].colour;
+                            } else if ( welsh_data[calc_id].Percentage_WBI <= 80 ) {
+                                return green['High'].colour;
+                            } else {
+                                return green['VHigh'].colour;
+                            }
+                        } else {
+                            if ( welsh_data[calc_id].Percentage_BI <= 20 ) {
+                                return green['VLow'].colour;
+                            } else if ( welsh_data[calc_id].Percentage_BI <= 40 ) {
+                                return green['Low'].colour;
+                            } else if ( welsh_data[calc_id].Percentage_BI <= 60 ) {
+                                return green['Medium'].colour;
+                            } else if ( welsh_data[calc_id].Percentage_BI <= 80 ) {
+                                return green['High'].colour;
+                            } else {
+                                return green['VHigh'].colour;
+                            }
+                        }
+                    }
+                    
+                    let get = function(id) {
+                        let calc_id = id - 340
+                        if ( select == 1 ) {
+                            return "Welsh Only Identity: " + welsh_data[calc_id].Percentage_WI;
+                        } else if ( select == 2 ) {
+                            return "Welsh-British Identity: " + welsh_data[calc_id].Percentage_WBI;
+                        } else {
+                            return "British Only Identity: " + welsh_data[calc_id].Percentage_BI;
+                        }
+                    }
+
+                    let popget = function(id) {
+                        let calc_id = id - 340
+                        return "Total population: " + welsh_data[calc_id].Total_Population;
+                    }
+
+                    secondSvg.selectAll('path')
+                        .data(geo_data.features)
+                        .join((enter) => {
+                            enter.append('path')
+                                .attr('d', path)
+                                .attr('fill', (d) => get_colour(d.properties.FID))
+                                .attr('stroke', '#fcfcfc')
+                                .attr('stroke-width', '1px')
+
+                                .on('mouseover', function (d, i) {
+                                    d3.select(this).transition()
+                                        .duration('50')
+                                        .attr('fill', 'url(#dots)'); 
+                                    div2.transition()
+                                        .duration(50)
+                                        .style("opacity", 1);
+                                        let num = "<b>" + i.properties.LAD24NM + ":</b> <br>" + get(i.properties.FID) + "% <br><em><small>" +
+                                                popget(i.properties.FID) + "<small><em>";
+                                            div2.html(num)
+                                                .style("left", (d.pageX + 15) + "px")
+                                                .style("top", (d.pageY - 30) + "px");
+                                    })
+                                .on('mouseout', function (d, i) {
+                                    d3.select(this).transition()
+                                        .duration('50')
+                                        .attr('opacity', '1')
+                                        .attr('fill', (d) => get_colour(d.properties.FID))
+                                    div2.transition()
+                                        .duration('50')
+                                        .style("opacity", 0);
+                                    })
+                            }, (update) => {
+
+                            update.attr('fill', (d) => get_colour(d.properties.FID))
+                                .on('mouseover', function (d, i) {
+                                        d3.select(this).transition()
+                                            .duration('50')
+                                            .attr('fill', 'url(#dots)'); 
+                                        div2.transition()
+                                            .duration(50)
+                                            .style("opacity", 1);
+                                            let num = "<b>" + i.properties.LAD24NM + ":</b> <br>" + get(i.properties.FID) + "% <br><em><small>" +
+                                                popget(i.properties.FID) + "<small><em>";
+                                                div2.html(num)
+                                                    .style("left", (d.pageX + 15) + "px")
+                                                    .style("top", (d.pageY - 30) + "px");
+                                    })
+                                .on('mouseout', function (d, i) {
+                                        d3.select(this).transition()
+                                            .duration('50')
+                                            .attr('opacity', '1')
+                                            .attr('fill', (d) => get_colour(d.properties.FID))
+                                        div2.transition()
+                                            .duration('50')
+                                            .style("opacity", 0);
+                            });
+                        
+                        })
+                        
+            })};      
+            
+            let canButton = document.getElementById("canButton");
+            let wButton = document.getElementById("wButton");
+
+            // when the window loads highlight the 'can speak welsh' and 'welsh identity' buttons
+            window.onload = function () {
+                canButton.style.backgroundColor='#e1e0e0';
+                wButton.style.backgroundColor='#e1e0e0';
+                update(1);
+                updateSpeak('a');
+            };
+
+            // when the can't button is clicked, change the colour of can button and change map 
+            document.querySelector("#cantButton").onclick = function () {
+                canButton.style.backgroundColor='#ffffff';
+                updateSpeak('b');
+            };
+            canButton.addEventListener('mouseover', () => {
+                canButton.style.backgroundColor='#e1e0e0';
+            });
+
+            // when the welsh-british/british button is clicked, change the colour of welsh button and change map 
+            document.querySelector("#wbButtons").onclick = function () {
+                update(2);
+                wButton.style.backgroundColor='#ffffff';
+            };
+            document.querySelector("#bButtons").onclick = function () {
+                update(3);
+                wButton.style.backgroundColor='#ffffff';
+            };
+            wButton.addEventListener('mouseover', () => {
+                wButton.style.backgroundColor='#e1e0e0';
+            })
+
+        
+        </script>
+    </body>
+</html>
