@@ -29,3 +29,8 @@ Users can interact with the visualisation in the following ways:
 ├── walesLocalAuth.geojson  # geoJSON data to map Welsh local authorities
 └── README.md               # Project documentation
 ```
+
+## Data Sources
+Welsh Language and Identification Data: [National identity, number of people aged 3 years and over who can speak Welsh and Welsh language skills - Census 2021](https://www.ons.gov.uk/datasets/create/filter-outputs/37c2e85c-7965-498b-9642-f75811659fbf#get-data-)  
+
+GeoJSON Data: [Office for National Statistics - Local Authority Districts (December 2024) Boundaries UK BFE. Filtered for Wales.](https://geoportal.statistics.gov.uk/datasets/a4d56f9755be48b0a78c120e499fa9df_0/explore?filters=eyJMQUQyNENEIjpbIlcwNjAwMDAwMSIsIlcwNjAwMDAwMiIsIlcwNjAwMDAwMyIsIlcwNjAwMDAwNCIsIlcwNjAwMDAwNSIsIlcwNjAwMDAwNiIsIlcwNjAwMDAwOCIsIlcwNjAwMDAxMCIsIlcwNjAwMDAwOSIsIlcwNjAwMDAxMSIsIlcwNjAwMDAxMyIsIlcwNjAwMDAxMiIsIlcwNjAwMDAyMyIsIlcwNjAwMDAyMiIsIlcwNjAwMDAxNCIsIlcwNjAwMDAxNSIsIlcwNjAwMDAyMCIsIlcwNjAwMDAxNiIsIlcwNjAwMDAxOCIsIlcwNjAwMDAxOSIsIlcwNjAwMDAyMSIsIlcwNjAwMDAyNCJdfQ%3D%3D&location=52.006029%2C-1.332135%2C7.80)
